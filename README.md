@@ -175,6 +175,50 @@ uint32_t timestamp;
 After this header, the length of the data structure depends on the type of data. Data is written
 using 4 byte floating point format.
 
+#### Acceleration Data (18 bytes total)
+```
+header (6 bytes)
+float x;
+float y;
+float z;
+```
+
+#### Magnetic Data (18 bytes total)
+```
+header (6 bytes)
+float x;
+float y;
+float z;
+```
+
+#### Orientation Data (18 bytes total)
+```
+header (6 bytes)
+float x;
+float y;
+float z;
+```
+
+#### Temperature Data (10 bytes total)
+```
+header (6 bytes)
+float temp;
+```
+
+#### Luminosity Data (10 bytes total)
+```
+header (6 bytes)
+float lux;
+```
+
+#### UV Light Data (10 bytes total)
+```
+header (6 bytes)
+float uv;
+```
+
+See `examples/sd_card/sd_card.ino` for a usage example.
+
 # Getting Help
 If you're having trouble running the examples, chances are something is messed up with the external
 library locations in your Arduino IDE. Double check that the ArdusatLogging library is imported into
