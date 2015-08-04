@@ -10,12 +10,9 @@
 
 #include <Arduino.h>
 #include <utility/SdFat.h>
-#include <utility/drivers.h>
-#include <avr/pgmspace.h>
 #include <utility/SdVolume.h>
 #include <utility/MemoryFree.h>
 #include <utility/BinaryDataFmt.h>
-#include <utility/serial.h>
 #include <utility/RTClib.h>
 
 #include "ArdusatSDK.h"
