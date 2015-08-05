@@ -8,6 +8,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <ArdusatSDK.h>
+#include <ArdusatLogging.h>
 
 void setup()
 {
