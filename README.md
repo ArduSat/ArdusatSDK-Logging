@@ -13,9 +13,10 @@ navigate to your download (zip file or the directory cloned with git). You now s
 to use the SDK in your sketches.
 
 # Using the Logging SDK
-The first step to using the SDK is to import it into your sketch. This can be done with a simple
-import statement:
+The first step to using the SDK is to import it into your sketch. But make sure to also import the
+main [ArdusatSDK](http://github.com/ardusat/ardusatsdk). This can be done with two simple import statements:
 ```
+#import <ArdusatSDK.h>
 #import <ArdusatLogging.h>
 ```
 
