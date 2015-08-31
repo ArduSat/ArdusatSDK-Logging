@@ -1,8 +1,27 @@
-/**
- * @file   ArdusatLogging.h
- * @Author Ben Peters (ben@ardusat.com)
- * @date   December 3, 2014
- * @brief  ArdusatLogging logs sensor readings
+/*
+ * =====================================================================================
+ *
+ *       Filename:  ArdusatLogging.h
+ *
+ *    Description:  Implements functions necessary for logging results to an SD
+ *                  card instead of serially printing.
+ *
+ *                  This SDK uses many third-party libraries available from
+ *                  Adafruit (https://github.com/adafruit). These libraries are
+ *                  mostly under an Apache License, Version 2.0.
+ *
+ *                  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Organization:  Ardusat
+ *        Version:  2.0
+ *       Compiler:  Arduino
+ *
+ *        Created:  12/3/2014
+ *         Author:  Ben Peters (ben@ardusat.com)
+ *   Last Updated:  8/25/2015
+ *   Last Updater:  Sam Olds (sam@ardusat.com)
+ *
+ * =====================================================================================
  */
 
 #ifndef ARDUSATLOGGING_H_
@@ -35,27 +54,27 @@ extern "C" {
  * data. This helps save SD card space, but means that the data must be decoded
  * after download before it can be used.
  */
+int writeString(const char *output_buf);
+int writeBytes(const unsigned char *buffer, unsigned char numBytes);
+int writeAcceleration(const char *sensorName, acceleration_t & data);
+int writeMagnetic(const char *sensorName, magnetic_t & data);
+int writeGyro(const char *sensorName, gyro_t & data);
+int writeTemperature(const char *sensorName, temperature_t & data);
+int writeLuminosity(const char *sensorName, luminosity_t & data);
+int writeUVLight(const char *sensorName, uvlight_t & data);
+int writeOrientation(const char *sensorName, orientation_t & data);
+int writePressure(const char *sensorName, pressure_t & data);
+
+int binaryWriteAcceleration(const unsigned char sensorId, acceleration_t & data);
+int binaryWriteMagnetic(const unsigned char sensorId, magnetic_t & data);
+int binaryWriteGyro(const unsigned char sensorId, gyro_t & data);
+int binaryWriteTemperature(const unsigned char sensorId, temperature_t & data);
+int binaryWriteLuminosity(const unsigned char sensorId, luminosity_t & data);
+int binaryWriteUVLight(const unsigned char sensorId, uvlight_t & data);
+int binaryWriteOrientation(const unsigned char sensorId, orientation_t & data);
+int binaryWritePressure(const unsigned char sensorId, pressure_t & data);
+
 bool beginDataLog(int chipSelectPin, const char *fileNamePrefix, bool csvData);
-
-int writeBytes(const uint8_t *buffer, uint8_t numBytes);
-int writeString(const char *output);
-int writeAcceleration(const char *sensorName, acceleration_t *data);
-int writeMagnetic(const char *sensorName, magnetic_t *data);
-int writeGyro(const char *sensorName, gyro_t *data);
-int writeTemperature(const char *sensorName, temperature_t *data);
-int writeLuminosity(const char *sensorName, luminosity_t *data);
-int writeUVLight(const char *sensorName, uvlight_t *data);
-int writeOrientation(const char *sensorName, orientation_t *data);
-int writePressure(const char *sensorName, pressure_t *data);
-
-int binaryWriteAcceleration(const uint8_t sensorId, acceleration_t *data);
-int binaryWriteMagnetic(const uint8_t sensorId, magnetic_t *data);
-int binaryWriteGyro(const uint8_t sensorId, gyro_t *data);
-int binaryWriteTemperature(const uint8_t sensorId, temperature_t *data);
-int binaryWriteLuminosity(const uint8_t sensorId, luminosity_t *data);
-int binaryWriteUVLight(const uint8_t sensorId, uvlight_t *data);
-int binaryWriteOrientation(const uint8_t sensorId, orientation_t *data);
-int binaryWritePressure(const uint8_t sensorId, pressure_t *data);
 
 /**
  * Setup and use the RTC chip, if found

@@ -168,9 +168,9 @@ each reading, which can be used to calculate the total amount of space required 
 Every data log has an identical header that identifies the sensor, the type of sensor, and the
 timestamp the measurement was taken.
 ```
-uint8_t type;
-uint8_t id;
-uint32_t timestamp;
+unsigned char type;
+unsigned char id;
+unsigned int timestamp;
 ```
 
 After this header, the length of the data structure depends on the type of data. Data is written
