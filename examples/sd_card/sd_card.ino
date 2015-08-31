@@ -101,7 +101,7 @@ void setup()
  *         Name:  loop
  *  Description:  After setup runs, this loop function runs until the Arduino loses
  *                power or resets. We go through and update each of the attached
- *                sensors, write the values to the SD card, then delay before
+ *                sensors, log the values to the SD card, then delay before
  *                repeating the loop again.
  * =====================================================================================
  */
@@ -117,19 +117,19 @@ void loop()
   readUVLight(uv_light);
 
   if (LOG_CSV_DATA) {
-    bytesWritten = writeAcceleration("accelerometer", accel);
-    bytesWritten += writeMagnetic("magnetic", mag);
-    bytesWritten += writeGyro("gyro", orientation);
-    bytesWritten += writeTemperature("temp", temp);
-    bytesWritten += writeLuminosity("luminosity", luminosity);
-    bytesWritten += writeUVLight("uv", uv_light);
+    bytesWritten = logAcceleration("accelerometer", accel);
+    bytesWritten += logMagnetic("magnetic", mag);
+    bytesWritten += logGyro("gyro", orientation);
+    bytesWritten += logTemperature("temp", temp);
+    bytesWritten += logLuminosity("luminosity", luminosity);
+    bytesWritten += logUVLight("uv", uv_light);
   } else {
-    bytesWritten = binaryWriteAcceleration(0, accel);
-    bytesWritten += binaryWriteMagnetic(1, mag);
-    bytesWritten += binaryWriteGyro(2, orientation);
-    bytesWritten += binaryWriteTemperature(3, temp);
-    bytesWritten += binaryWriteLuminosity(4, luminosity);
-    bytesWritten += binaryWriteUVLight(5, uv_light);
+    bytesWritten = binaryLogAcceleration(0, accel);
+    bytesWritten += binaryLogMagnetic(1, mag);
+    bytesWritten += binaryLogGyro(2, orientation);
+    bytesWritten += binaryLogTemperature(3, temp);
+    bytesWritten += binaryLogLuminosity(4, luminosity);
+    bytesWritten += binaryLogUVLight(5, uv_light);
   }
 
   Serial.print("Wrote ");

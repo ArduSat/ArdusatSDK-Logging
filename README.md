@@ -71,8 +71,8 @@ the log file. Since all subsequent values log milliseconds since the Arduino sta
 datetimes. The RTC chip used is the DS1307, and should be wired up on the I2C bus using `SDA` and
 `SCL` pins.
 
-After the logging system is started, the `writeX` and `binaryWriteX` functions can be used to
-actually write the binary data much like the `ToJSON` and `ToCSV` functions listed above. Binary and
+After the logging system is started, the `logX` and `binaryLogX` functions can be used to
+actually log the binary data much like the `ToJSON` and `ToCSV` functions listed above. Binary and
 CSV formats are described below.
 
 ### CSV Log Format
@@ -84,9 +84,9 @@ since the Arduino chip was started.
 ### Logging Other Sensor Data
 If you have a custom sketch that includes data which doesn't fit into any of the ArdusatSDK-provided
 data structures, two convenience functions `valueToCSV` and `valuesToCSV` are provided to format
-generic `float` values into CSV strings. `valueToCSV` writes a single `float` to the CSV string,
-while `valuesToCSV` writes an array of strings. The output of these functions can be given to the
-`writeString` function to log the data to an SD card. Both `toCSV` functions take an optional
+generic `float` values into CSV strings. `valueToCSV` logs a single `float` to the CSV string,
+while `valuesToCSV` logs an array of strings. The output of these functions can be given to the
+`logString` function to log the data to an SD card. Both `toCSV` functions take an optional
 `timestamp` argument - if this is not provided, the current time will be added to the CSV string
 using the `millis()` function.
 
@@ -109,8 +109,8 @@ myValues.myValue1 = someOtherMeasurementFunction();
 myValues.myValue2 = another();
 myValues.myValue3 = thirdMeasurementFunction();
 
-writeString(valueToCSV("first_sensor", mySingleValue, currTime));
-writeString(valuesToCSV("my_vector_data", (float *) &myValues, 3));
+logString(valueToCSV("first_sensor", mySingleValue, currTime));
+logString(valuesToCSV("my_vector_data", (float *) &myValues, 3));
 ```
 
 ### Binary Data Format
