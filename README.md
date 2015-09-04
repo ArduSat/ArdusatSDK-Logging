@@ -3,12 +3,12 @@ ArdusatSDK-Logging
 
 The Ardusat Logging SDK is a software package designed to make logging the data from the sensors
 found in the [Ardusat Space Kit](http://www.ardusat.com/products) as easy as possible. It requires
-the [Ardusat SDK](http://github.com/ardusat/ardusatsdk) to be included as well.
+the [Ardusat SDK](http://github.com/ardusat/ardusatsdk) to be installed as well.
 
 # Installing the Logging SDK
-Installing the SDK is easy - it works like any other third party Arduino library. Just download
-the SDK at https://s3-us-west-2.amazonaws.com/ardusatweb/ArdusatSDK-Logging.zip or clone this repository
-to your hard drive, then open the Arduino IDE, go to Sketch -> Import Library -> Add Library and
+Installing the SDK is easy - it works like any other third party Arduino library. Just [download 
+the SDK](https://s3-us-west-2.amazonaws.com/ardusatweb/ArdusatSDK-Logging.zip) or clone this repository
+to your hard drive, then open the Arduino IDE, go to 'Sketch -> Import Library -> Add Library' and
 navigate to your download (zip file or the directory cloned with git). You now should be able
 to use the SDK in your sketches.
 
