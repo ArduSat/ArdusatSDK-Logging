@@ -47,14 +47,11 @@
  *-----------------------------------------------------------------------------*/
 const short READ_INTERVAL = 10000; // interval, in ms, to wait between readings
 
-// Pins used for measurements
-const short UVOUT = A0;      // Output from the UV sensor
-const short REF_3V3 = A1;    // 3.3V power on the Arduino board
-const short SD_CS_PIN = 10;  // CS pin used for SD card reader. Reader should be wired
-                           // to DIO 10, 11, 12, 13
+// CS pin used for SD card reader. Reader should be wired to DIO 10, 11, 12, 13
+const short SD_CS_PIN = 10;
 
 static char LOG_FILE_PREFIX[] = "MYLOG";
-static bool LOG_CSV_DATA = true;
+static bool LOG_CSV_DATA = true; // otherwise, binary data is logged
 
 temperature_t temp;
 luminosity_t luminosity;
@@ -87,10 +84,6 @@ void setup()
   beginUVLightSensor();
   beginGyroSensor();
   beginMagneticSensor();
-  
-  // More pin initializations
-  pinMode(UVOUT, INPUT);
-  pinMode(REF_3V3, INPUT);
   
   /* We're ready to go! */
   Serial.println("");

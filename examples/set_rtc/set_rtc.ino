@@ -48,7 +48,7 @@ ArdusatSerial serialConnection(SERIAL_MODE_HARDWARE_AND_SOFTWARE, 8, 9);
  *                the program ready to begin logging data.
  * =====================================================================================
  */
-void setup()
+void setup(void)
 {
   serialConnection.begin(9600);
   setRTC();
@@ -63,6 +63,6 @@ void setup()
  *                power or resets. We don't do anything in this loop function.
  * =====================================================================================
  */
-void loop()
+void loop(void)
 {
 }

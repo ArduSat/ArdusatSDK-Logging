@@ -169,7 +169,7 @@ timestamp the measurement was taken.
 ```
 unsigned char type;
 unsigned char id;
-unsigned int timestamp;
+unsigned long timestamp;
 ```
 
 After this header, the length of the data structure depends on the type of data. Data is written
