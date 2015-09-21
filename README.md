@@ -6,7 +6,7 @@ the [Ardusat SDK](http://github.com/ardusat/ardusatsdk) to be installed as well.
 
 ## Installing the Logging SDK
 Installing the SDK is easy - it works like any other third party Arduino library. Just [download 
-the SDK](https://s3-us-west-2.amazonaws.com/ardusatweb/ArdusatSDK-Logging.zip) or clone this repository
+the SDK](https://www.ardusat.com/downloads/ArdusatSDK-Logging.zip) or clone this repository
 to your hard drive, then open the Arduino IDE, go to 'Sketch -> Import Library -> Add Library' and
 navigate to your download (zip file or the directory cloned with git). You now should be able
 to use the SDK in your sketches.

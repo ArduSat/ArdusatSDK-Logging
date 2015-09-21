@@ -1,27 +1,8 @@
-/*
- * =====================================================================================
- *
- *       Filename:  ArdusatLogging.cpp
- *
- *    Description:  Implements functions necessary for logging results to an SD
- *                  card instead of serially printing.
- *
- *                  This SDK uses many third-party libraries available from
- *                  Adafruit (https://github.com/adafruit). These libraries are
- *                  mostly under an Apache License, Version 2.0.
- *
- *                  http://www.apache.org/licenses/LICENSE-2.0
- *
- *   Organization:  Ardusat
- *        Version:  2.0
- *       Compiler:  Arduino
- *
- *        Created:  12/3/2014
- *         Author:  Ben Peters (ben@ardusat.com)
- *   Last Updated:  8/25/2015
- *   Last Updater:  Sam Olds (sam@ardusat.com)
- *
- * =====================================================================================
+/**
+ * @file   ArdusatLogging.cpp
+ * @Author Ben Peters (ben@ardusat.com)
+ * @date   December 3, 2014
+ * @brief  Implements functions necessary for logging results to an SD card instead of stdout.
  */
 
 #include <stdio.h>
@@ -291,7 +272,7 @@ int _log_csv_time_header(DateTime & now, unsigned long curr_millis)
 int _log_binary_time_header(DateTime & now, unsigned long curr_millis)
 {
   unsigned char buf[10];
-  unsigned int unixtime = now.unixtime();
+  unsigned long unixtime = now.unixtime();
 
   buf[0] = 0xFF;
   buf[1] = 0xFF;
