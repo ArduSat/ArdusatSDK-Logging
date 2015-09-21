@@ -1,18 +1,17 @@
-ArdusatSDK-Logging
-===================
+# Ardusat Logging SDK
 
 The Ardusat Logging SDK is a software package designed to make logging the data from the sensors
 found in the [Ardusat Space Kit](http://www.ardusat.com/products) as easy as possible. It requires
-the [Ardusat SDK](http://github.com/ardusat/ardusatsdk) to be included as well.
+the [Ardusat SDK](http://github.com/ardusat/ardusatsdk) to be installed as well.
 
-# Installing the Logging SDK
-Installing the SDK is easy - it works like any other third party Arduino library. Just download 
-the SDK at https://s3-us-west-2.amazonaws.com/ardusatweb/ArdusatSDK-Logging.zip or clone this repository
-to your hard drive, then open the Arduino IDE, go to Sketch -> Import Library -> Add Library and
+## Installing the Logging SDK
+Installing the SDK is easy - it works like any other third party Arduino library. Just [download 
+the SDK](https://www.ardusat.com/downloads/ArdusatSDK-Logging.zip) or clone this repository
+to your hard drive, then open the Arduino IDE, go to 'Sketch -> Import Library -> Add Library' and
 navigate to your download (zip file or the directory cloned with git). You now should be able
 to use the SDK in your sketches.
 
-# Using the Logging SDK
+## Using the Logging SDK
 The first step to using the SDK is to import it into your sketch. But make sure to also import the
 main [ArdusatSDK](http://github.com/ardusat/ardusatsdk). This can be done with two simple import statements:
 ```
@@ -23,7 +22,7 @@ main [ArdusatSDK](http://github.com/ardusat/ardusatsdk). This can be done with t
 After the SDK is imported, the basic I/O functions and sensor drivers should be available.
 
 #### Limitations
-SoftwareSerial does not appear to work reliably above 57600 baud. 
+SoftwareSerial does not appear to work reliably above 57600 baud.
 
 ## Logging Sensor Data
 Data can be logged to an SD card to allow gathering data without an active connection to a computer.
@@ -31,7 +30,7 @@ To do this, an external SD card adapter breakout board is required; these are av
 [Adafruit](http://www.adafruit.com/product/254) and
 [SparkFun](https://www.sparkfun.com/products/12941). These boards use an SPI protocol that uses
 digital pins 11, 12, and 13 on most Arduinos, and additionally requires a configurable "chip select"
-pin that is often pin 10. 
+pin that is often pin 10.
 
 **External SD Breakout Wiring**
 
@@ -49,7 +48,7 @@ The exact SD cards supported might vary from board to board, but most should sup
 MicroSDHC cards formatted in FAT32 (or FAT16) formats.
 
 In order to log SD data, the function `beginDataLog` must be called. `beginDataLog` has three
-arguments: 
+arguments:
 
 `bool beginDataLog(int chipSelectPin, const char *fileNamePrefix, bool logCSVData)`
 
@@ -59,7 +58,7 @@ subdirectory `/DATA` on the SD card with sequential filenames up to 8 characters
 filename will be truncated as appropriate). Thus log files will be `/DATA/MYLOGFI0.CSV` to
 `/DATA/MYLOGFI9.CSV`, followed by `/DATA/MYLOGF10.CSV`, etc. Finally, the `logCSVData` argument
 specifies whether binary-format data logging (more space efficient, but must be decoded before use)
-or CSV format (can be read by a wide variety of software, but takes up more space) will be used. 
+or CSV format (can be read by a wide variety of software, but takes up more space) will be used.
 Binary formatted logs end in `.BIN`, CSV formatted logs end in `.CSV`. `beginDataLog` will return
 `true` if the log system was started successfully, `false` otherwise.
 
@@ -71,8 +70,8 @@ the log file. Since all subsequent values log milliseconds since the Arduino sta
 datetimes. The RTC chip used is the DS1307, and should be wired up on the I2C bus using `SDA` and
 `SCL` pins.
 
-After the logging system is started, the `writeX` and `binaryWriteX` functions can be used to
-actually write the binary data much like the `ToJSON` and `ToCSV` functions listed above. Binary and
+After the logging system is started, the `logX` and `binaryLogX` functions can be used to
+actually log the binary data much like the `ToJSON` and `ToCSV` functions listed above. Binary and
 CSV formats are described below.
 
 ### CSV Log Format
@@ -84,9 +83,9 @@ since the Arduino chip was started.
 ### Logging Other Sensor Data
 If you have a custom sketch that includes data which doesn't fit into any of the ArdusatSDK-provided
 data structures, two convenience functions `valueToCSV` and `valuesToCSV` are provided to format
-generic `float` values into CSV strings. `valueToCSV` writes a single `float` to the CSV string,
-while `valuesToCSV` writes an array of strings. The output of these functions can be given to the
-`writeString` function to log the data to an SD card. Both `toCSV` functions take an optional
+generic `float` values into CSV strings. `valueToCSV` logs a single `float` to the CSV string,
+while `valuesToCSV` logs an array of strings. The output of these functions can be given to the
+`logString` function to log the data to an SD card. Both `toCSV` functions take an optional
 `timestamp` argument - if this is not provided, the current time will be added to the CSV string
 using the `millis()` function.
 
@@ -109,8 +108,8 @@ myValues.myValue1 = someOtherMeasurementFunction();
 myValues.myValue2 = another();
 myValues.myValue3 = thirdMeasurementFunction();
 
-writeString(valueToCSV("first_sensor", mySingleValue, currTime));
-writeString(valuesToCSV("my_vector_data", (float *) &myValues, 3));
+logString(valueToCSV("first_sensor", mySingleValue, currTime));
+logString(valuesToCSV("my_vector_data", (float *) &myValues, 3));
 ```
 
 ### Binary Data Format
@@ -168,9 +167,9 @@ each reading, which can be used to calculate the total amount of space required 
 Every data log has an identical header that identifies the sensor, the type of sensor, and the
 timestamp the measurement was taken.
 ```
-uint8_t type;
-uint8_t id;
-uint32_t timestamp;
+unsigned char type;
+unsigned char id;
+unsigned long timestamp;
 ```
 
 After this header, the length of the data structure depends on the type of data. Data is written

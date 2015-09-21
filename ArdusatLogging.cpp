@@ -2,12 +2,11 @@
  * @file   ArdusatLogging.cpp
  * @Author Ben Peters (ben@ardusat.com)
  * @date   December 3, 2014
- * @brief  Implements ArdusatSDK generic sensor read & configuration functions
+ * @brief  Implements functions necessary for logging results to an SD card instead of stdout.
  */
 
 #include <stdio.h>
 #include <string.h>
-
 #include "ArdusatLogging.h"
 
 RTC_DS1307 RTC;
@@ -18,36 +17,34 @@ File file;
 prog_char sd_card_error[] = "Not enough RAM for SD card sys(free: ";
 prog_char csv_header_fmt[] = "timestamp: %lu at millis %lu\n";
 
-#define write_if_init(gen_fn) return writeString(gen_fn);
-
 /**
- * Helper function to write null-terminated output buffer string to file.
+ * Helper function to log null-terminated output buffer string to file.
  *
- * @param output_buf pointer to output buffer to write.
+ * @param output_buf pointer to output buffer to log.
  *
  * @return number of bytes written
  */
-int writeString(const char *output_buf)
+int logString(const char *output_buf)
 {
   int buf_len = strlen(output_buf);
-  return writeBytes((const uint8_t *) output_buf, buf_len);
+  return logBytes((const unsigned char *)output_buf, buf_len);
 }
 
 /**
- * Writes the byte array pointed to by buffer to the SD card. Note that there is
+ * Log the byte array pointed to by buffer to the SD card. Note that there is
  * absolutely no safety checking on numBytes, so use with care.
  *
  * Since we use a shared buffer between the SD card library and many of the output
  * functions, performs a check first to see if we need to allocate a new buffer.
  *
- * @param buffer byte array to write
- * @param number of bytes to write
+ * @param buffer byte array to log
+ * @param number of bytes to log 
  *
  * @return number of bytes written
  */
-int writeBytes(const uint8_t *buffer, uint8_t numBytes)
+int logBytes(const unsigned char *buffer, unsigned char numBytes)
 {
-  uint8_t *buf;
+  unsigned char *buf;
   int written;
   bool buf_allocated = false;
 
@@ -56,12 +53,12 @@ int writeBytes(const uint8_t *buffer, uint8_t numBytes)
   }
 
   if (file.isOpen()) {
-    if (buffer == (uint8_t *) _getOutBuf()) {
-      buf = (uint8_t *) malloc(numBytes);
+    if (buffer == (unsigned char *) _getOutBuf()) {
+      buf = (unsigned char *) malloc(numBytes);
       buf_allocated = true;
       memcpy(buf, buffer, numBytes);
     } else {
-      buf = (uint8_t *) buffer;
+      buf = (unsigned char *) buffer;
     }
 
     written = file.write(buf, numBytes);
@@ -75,194 +72,192 @@ int writeBytes(const uint8_t *buffer, uint8_t numBytes)
 }
 
 /**
- * Writes a line of CSV formatted acceleration data to the SD card.
+ * Logs a line of CSV formatted acceleration data to the SD card.
  *
  * @param sensorName of this sensor
- * @param data acceleration_t data to write
+ * @param data acceleration_t data to log 
  *
  * @return number of bytes written
  */
-int writeAcceleration(const char *sensorName, acceleration_t *data)
+int logAcceleration(const char *sensorName, acceleration_t & data)
 {
-  write_if_init(accelerationToCSV(sensorName, data))
+  return logString(accelerationToCSV(sensorName, data));
 }
 
 /**
- * Writes a line of CSV formatted magnetic data to the SD card.
+ * Logs a line of CSV formatted magnetic data to the SD card.
  *
  * @param sensorName of this sensor
- * @param data magnetic_t data to write
+ * @param data magnetic_t data to log
  *
  * @return number of bytes written
  */
-int writeMagnetic(const char *sensorName, magnetic_t *data)
+int logMagnetic(const char *sensorName, magnetic_t & data)
 {
-  write_if_init(magneticToCSV(sensorName, data))
+  return logString(magneticToCSV(sensorName, data));
 }
 
 /**
- * Writes a line of CSV formatted orientation data to the SD card.
+ * Logs a line of CSV formatted orientation data to the SD card.
  *
  * @param sensorName of this sensor
- * @param data gyro_t data to write
+ * @param data gyro_t data to log
  *
  * @return number of bytes written
  */
-int writeGyro(const char *sensorName, gyro_t *data)
+int logGyro(const char *sensorName, gyro_t & data)
 {
-  write_if_init(gyroToCSV(sensorName, data))
+  return logString(gyroToCSV(sensorName, data));
 }
 
 /**
- * Writes a line of CSV formatted tempoerature data to the SD card.
+ * Logs a line of CSV formatted tempoerature data to the SD card.
  *
  * @param sensorName of this sensor
- * @param data temperature_t data to write
+ * @param data temperature_t data to log
  *
  * @return number of bytes written
  */
-int writeTemperature(const char *sensorName, temperature_t *data)
+int logTemperature(const char *sensorName, temperature_t & data)
 {
-  write_if_init(temperatureToCSV(sensorName, data))
+  return logString(temperatureToCSV(sensorName, data));
 }
 
 /**
- * Writes a line of CSV formatted luminosity data to the SD card.
+ * Logs a line of CSV formatted luminosity data to the SD card.
  *
  * @param sensorName of this sensor
- * @param data luminosity_t data to write
+ * @param data luminosity_t data to log
  *
  * @return number of bytes written
  */
-int writeLuminosity(const char *sensorName, luminosity_t *data)
+int logLuminosity(const char *sensorName, luminosity_t & data)
 {
-  write_if_init(luminosityToCSV(sensorName, data))
+  return logString(luminosityToCSV(sensorName, data));
 }
 
 /**
- * Writes a line of CSV formatted UV light data to the SD card.
+ * Logs a line of CSV formatted UV light data to the SD card.
  *
  * @param sensorName of this sensor
- * @param data uvlight_t data to write
+ * @param data uvlight_t data to log
  *
  * @return number of bytes written
  */
-int writeUVLight(const char *sensorName, uvlight_t *data)
+int logUVLight(const char *sensorName, uvlight_t & data)
 {
-  write_if_init(uvlightToCSV(sensorName, data))
+  return logString(uvlightToCSV(sensorName, data));
 }
 
 /**
- * Writes a line of CSV formatted orientation data to SD card.
+ * Logs a line of CSV formatted orientation data to SD card.
  *
  * @param sensorName of this sensor
- * @param data orientation_t data to write
+ * @param data orientation_t data to log
  *
  * @return number of bytes written
  */
-int writeOrientation(const char *sensorName, orientation_t *data)
+int logOrientation(const char *sensorName, orientation_t & data)
 {
-  write_if_init(orientationToCSV(sensorName, data))
+  return logString(orientationToCSV(sensorName, data));
 }
 
 /**
- * Writes a line of CSV formatted pressure data to SD card.
+ * Logs a line of CSV formatted pressure data to SD card.
  *
  * @param sensorName of this sensor
- * @param data pressure_t data to write
+ * @param data pressure_t data to log
  *
  * @return number of bytes written
  */
-int writePressure(const char *sensorName, pressure_t *data)
+int logPressure(const char *sensorName, pressure_t & data)
 {
-  write_if_init(pressureToCSV(sensorName, data))
+  return logString(pressureToCSV(sensorName, data));
 }
 
 #define init_data_struct(type_def, type_enum) \
   type_def bin_data; \
   bin_data.type = type_enum; \
   bin_data.id = sensorId; \
-  bin_data.timestamp = data->header.timestamp;
+  bin_data.timestamp = data.header.timestamp;
 
-#define _write_binary_data_struct(type) return writeBytes((uint8_t *) &bin_data, sizeof(type));
-
-int binaryWriteAcceleration(const uint8_t sensorId, acceleration_t *data)
+int binaryLogAcceleration(const unsigned char sensorId, acceleration_t & data)
 {
   init_data_struct(acceleration_bin_t, ARDUSAT_SENSOR_TYPE_ACCELERATION)
-  bin_data.x = data->x;
-  bin_data.y = data->y;
-  bin_data.z = data->z;
+  bin_data.x = data.x;
+  bin_data.y = data.y;
+  bin_data.z = data.z;
 
-  _write_binary_data_struct(acceleration_bin_t)
+  return logBytes((unsigned char *) &bin_data, sizeof(acceleration_bin_t));
 }
 
-int binaryWriteMagnetic(const uint8_t sensorId, magnetic_t *data)
+int binaryLogMagnetic(const unsigned char sensorId, magnetic_t & data)
 {
   init_data_struct(magnetic_bin_t, ARDUSAT_SENSOR_TYPE_MAGNETIC)
-  bin_data.x = data->x;
-  bin_data.y = data->y;
-  bin_data.z = data->z;
+  bin_data.x = data.x;
+  bin_data.y = data.y;
+  bin_data.z = data.z;
 
-  _write_binary_data_struct(magnetic_bin_t)
+  return logBytes((unsigned char *) &bin_data, sizeof(magnetic_bin_t));
 }
 
-int binaryWriteGyro(const uint8_t sensorId, gyro_t *data)
+int binaryLogGyro(const unsigned char sensorId, gyro_t & data)
 {
   init_data_struct(gyro_bin_t, ARDUSAT_SENSOR_TYPE_GYRO)
-  bin_data.x = data->x;
-  bin_data.y = data->y;
-  bin_data.z = data->z;
+  bin_data.x = data.x;
+  bin_data.y = data.y;
+  bin_data.z = data.z;
 
-  _write_binary_data_struct(gyro_bin_t)
+  return logBytes((unsigned char *) &bin_data, sizeof(gyro_bin_t));
 }
 
-int binaryWriteTemperature(const uint8_t sensorId, temperature_t *data)
+int binaryLogTemperature(const unsigned char sensorId, temperature_t & data)
 {
   init_data_struct(temperature_bin_t, ARDUSAT_SENSOR_TYPE_TEMPERATURE)
-  bin_data.temp = data->t;
+  bin_data.temp = data.t;
 
-  _write_binary_data_struct(temperature_bin_t)
+  return logBytes((unsigned char *) &bin_data, sizeof(temperature_bin_t));
 }
 
-int binaryWriteLuminosity(const uint8_t sensorId, luminosity_t *data)
+int binaryLogLuminosity(const unsigned char sensorId, luminosity_t & data)
 {
   init_data_struct(luminosity_bin_t, ARDUSAT_SENSOR_TYPE_LUMINOSITY)
-  bin_data.luminosity = data->lux;
+  bin_data.luminosity = data.lux;
 
-  _write_binary_data_struct(luminosity_bin_t)
+  return logBytes((unsigned char *) &bin_data, sizeof(luminosity_bin_t));
 }
 
-int binaryWriteUVLight(const uint8_t sensorId, uvlight_t *data)
+int binaryLogUVLight(const unsigned char sensorId, uvlight_t & data)
 {
   init_data_struct(uv_light_bin_t, ARDUSAT_SENSOR_TYPE_UV)
-  bin_data.uv = data->uvindex;
+  bin_data.uv = data.uvindex;
 
-  _write_binary_data_struct(uv_light_bin_t)
+  return logBytes((unsigned char *) &bin_data, sizeof(uv_light_bin_t));
 }
 
-int binaryWriteOrientation(const uint8_t sensorId, orientation_t *data)
+int binaryLogOrientation(const unsigned char sensorId, orientation_t & data)
 {
   init_data_struct(orientation_bin_t, ARDUSAT_SENSOR_TYPE_ORIENTATION)
-  bin_data.roll = data->roll;
-  bin_data.pitch = data->pitch;
-  bin_data.heading = data->heading;
+  bin_data.roll = data.roll;
+  bin_data.pitch = data.pitch;
+  bin_data.heading = data.heading;
 
-  _write_binary_data_struct(orientation_bin_t)
+  return logBytes((unsigned char *) &bin_data, sizeof(orientation_bin_t));
 }
 
-int binaryWritePressure(const uint8_t sensorId, pressure_t *data)
+int binaryLogPressure(const unsigned char sensorId, pressure_t & data)
 {
   init_data_struct(pressure_bin_t, ARDUSAT_SENSOR_TYPE_PRESSURE)
-  bin_data.pressure = data->pressure;
+  bin_data.pressure = data.pressure;
 
-  _write_binary_data_struct(pressure_bin_t)
+  return logBytes((unsigned char *) &bin_data, sizeof(pressure_bin_t));
 }
 
 
 /*
- * Helper function to write to the top of the CSV header with the current time
+ * Helper function to log to the top of the CSV header with the current time
  */
-int _write_csv_time_header(DateTime *now, unsigned long curr_millis)
+int _log_csv_time_header(DateTime & now, unsigned long curr_millis)
 {
   char fmt_buf[32];
 
@@ -270,20 +265,20 @@ int _write_csv_time_header(DateTime *now, unsigned long curr_millis)
 
   memset(_getOutBuf(), 0, OUTPUT_BUF_SIZE);
 
-  sprintf(_getOutBuf(), fmt_buf, now->unixtime(), curr_millis);
-  write_if_init(_getOutBuf());
+  sprintf(_getOutBuf(), fmt_buf, now.unixtime(), curr_millis);
+  return logString(_getOutBuf());
 }
 
-int _write_binary_time_header(DateTime *now, unsigned long curr_millis)
+int _log_binary_time_header(DateTime & now, unsigned long curr_millis)
 {
-  uint8_t buf[10];
-  uint32_t unixtime = now->unixtime();
+  unsigned char buf[10];
+  unsigned long unixtime = now.unixtime();
 
   buf[0] = 0xFF;
   buf[1] = 0xFF;
   memcpy(buf + 2, &unixtime, 4);
   memcpy(buf + 6, &curr_millis, 4);
-  return writeBytes(buf, 10);
+  return logBytes(buf, 10);
 }
 
 /**
@@ -370,9 +365,9 @@ bool beginDataLog(int chipSelectPin, const char *fileNamePrefix, bool csvData)
 
   if (RTC.isrunning() && file.isOpen()) {
     if (csvData) {
-      _write_csv_time_header(&now, curr_millis);
+      _log_csv_time_header(now, curr_millis);
     } else {
-      _write_binary_time_header(&now, curr_millis);
+      _log_binary_time_header(now, curr_millis);
     }
   }
 
