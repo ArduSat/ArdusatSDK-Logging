@@ -14,8 +14,8 @@ RTC_DS1307 RTC;
 SdVolume vol;
 SdFat sd;
 File file;
-prog_char sd_card_error[] = "Not enough RAM for SD card sys(free: ";
-prog_char csv_header_fmt[] = "timestamp: %lu at millis %lu\n";
+const prog_char sd_card_error[] = "Not enough RAM for SD card sys(free: ";
+const prog_char csv_header_fmt[] = "timestamp: %lu at millis %lu\n";
 
 /**
  * Helper function to log null-terminated output buffer string to file.
