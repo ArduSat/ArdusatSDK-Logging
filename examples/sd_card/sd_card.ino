@@ -70,10 +70,7 @@ gyro_t orientation;
  */
 void setup()
 {
-  Serial.begin(9600);
-
   if (!beginDataLog(SD_CS_PIN, LOG_FILE_PREFIX, LOG_CSV_DATA)) {
-    Serial.println("Failed to initialize SD card. Stopping...");
     while (true);
   }
 
@@ -84,9 +81,6 @@ void setup()
   beginUVLightSensor();
   beginGyroSensor();
   beginMagneticSensor();
-  
-  /* We're ready to go! */
-  Serial.println("");
 }
 
 /*
@@ -100,37 +94,34 @@ void setup()
  */
 void loop()
 {
-  int bytesWritten;
-
   readAcceleration(accel);
+  readTemperature(temp);
   readMagnetic(mag);
   readGyro(orientation);
-  readInfraredTemperature(temp);
   readLuminosity(luminosity);
   readUVLight(uv_light);
 
   if (LOG_CSV_DATA) {
-    bytesWritten = logAcceleration("accelerometer", accel);
-    bytesWritten += logMagnetic("magnetic", mag);
-    bytesWritten += logGyro("gyro", orientation);
-    bytesWritten += logTemperature("temp", temp);
-    bytesWritten += logLuminosity("luminosity", luminosity);
-    bytesWritten += logUVLight("uv", uv_light);
+    logAcceleration("accel", accel);
+    logMagnetic("mag", mag);
+    logGyro("gyro", orientation);
+    logTemperature("temp", temp);
+
+    readInfraredTemperature(temp);
+    logTemperature("ir", temp);
+
+    logLuminosity("lux", luminosity);
+    logUVLight("uv", uv_light);
   } else {
-    bytesWritten = binaryLogAcceleration(0, accel);
-    bytesWritten += binaryLogMagnetic(1, mag);
-    bytesWritten += binaryLogGyro(2, orientation);
-    bytesWritten += binaryLogTemperature(3, temp);
-    bytesWritten += binaryLogLuminosity(4, luminosity);
-    bytesWritten += binaryLogUVLight(5, uv_light);
+    binaryLogAcceleration(0, accel);
+    binaryLogMagnetic(1, mag);
+    binaryLogGyro(2, orientation);
+    binaryLogTemperature(3, temp);
+    readInfraredTemperature(temp);
+    binaryLogTemperature(4, temp);
+    binaryLogLuminosity(5, luminosity);
+    binaryLogUVLight(6, uv_light);
   }
-
-  Serial.print("Wrote ");
-  Serial.print(bytesWritten);
-  Serial.println(" bytes.");
-
-  Serial.print("Free Memory: ");
-  Serial.println(freeMemory());
 
   delay(READ_INTERVAL);
 }

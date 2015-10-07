@@ -14,8 +14,8 @@ RTC_DS1307 RTC;
 SdVolume vol;
 SdFat sd;
 File file;
-prog_char sd_card_error[] = "Not enough RAM for SD card sys(free: ";
-prog_char csv_header_fmt[] = "timestamp: %lu at millis %lu\n";
+const prog_char sd_card_error[] = "Not enough RAM (free: ";
+const prog_char csv_header_fmt[] = "time: %lu at %lu\n";
 
 /**
  * Helper function to log null-terminated output buffer string to file.
@@ -260,10 +260,9 @@ int binaryLogPressure(const unsigned char sensorId, pressure_t & data)
 int _log_csv_time_header(DateTime & now, unsigned long curr_millis)
 {
   char fmt_buf[32];
+  _resetOutBuf();
 
   strcpy_P(fmt_buf, csv_header_fmt);
-
-  memset(_getOutBuf(), 0, OUTPUT_BUF_SIZE);
 
   sprintf(_getOutBuf(), fmt_buf, now.unixtime(), curr_millis);
   return logString(_getOutBuf());
@@ -301,23 +300,13 @@ bool beginDataLog(int chipSelectPin, const char *fileNamePrefix, bool csvData)
   char fileName[19];
   char prefix[8];
   char rootPath[] = "/data";
-  unsigned long curr_millis = 0;
-  DateTime now;
+
 
   if (_output_buffer != NULL) {
     delete []_output_buffer;
   }
   OUTPUT_BUF_SIZE = 512;
   _output_buffer = vol.cacheAddress()->output_buf;
-
-  // Try to get the current time from the RTC, if available. This will be prepended to the log file
-  // to be used to convert relative timestamps to real time values.
-  Wire.begin();
-  RTC.begin();
-  if (RTC.isrunning()) {
-    now = RTC.now();
-    curr_millis = millis();
-  }
 
   if (freeMemory() < 400) {
     strcpy_P(_getOutBuf(), sd_card_error);
@@ -359,19 +348,59 @@ bool beginDataLog(int chipSelectPin, const char *fileNamePrefix, bool csvData)
 	i++;
       }
     }
-  } else {
-    sd.initErrorPrint();
   }
-
-  if (RTC.isrunning() && file.isOpen()) {
-    if (csvData) {
-      _log_csv_time_header(now, curr_millis);
-    } else {
-      _log_binary_time_header(now, curr_millis);
-    }
-  }
-
   return file.isOpen();
+}
+
+/*
+ * @brief Helper function to get current time from RTC & Arduino.
+ *
+ * @return 0 on success, -1 on failure
+ */
+int _getCurrentTime( DateTime *now, unsigned long *curr_millis )
+{
+  // Try to get the current time from the RTC, if available. This will be prepended to the log file
+  // to be used to convert relative timestamps to real time values.
+  Wire.begin();
+  RTC.begin();
+  if (RTC.isrunning()) {
+    *now = RTC.now();
+    *curr_millis = millis();
+    return 0;
+  }
+  return -1;
+}
+
+/**
+ * @brief Logs the current RTC timestamp and internal millis clock, if both are available
+ *
+ * @return number of bytes written
+ */
+int logRTCTimestamp()
+{
+  unsigned long curr_millis;
+  DateTime now;
+
+  if (_getCurrentTime( &now, &curr_millis ) == 0) {
+    return _log_csv_time_header(now, curr_millis);
+  }
+  return 0;
+}
+
+/**
+ * @brief Logs the current RTC timestamp and internal millis clock, if both are available
+ *
+ * @return number of bytes written
+ */
+int binaryLogRTCTimestamp()
+{
+  unsigned long curr_millis;
+  DateTime now;
+
+  if (_getCurrentTime( &now, &curr_millis ) == 0) {
+    return _log_binary_time_header(now, curr_millis);
+  }
+  return 0;
 }
 
 bool setRTC()

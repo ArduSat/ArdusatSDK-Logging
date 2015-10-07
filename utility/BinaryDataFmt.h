@@ -73,27 +73,4 @@ typedef struct {
   _bin_data_header
   float pressure;
 } pressure_bin_t;
-
-//To translate from floating point representations into
-//2 byte integer representations we need to choose an effective
-//measurement range. When decoding binary data after logging, these
-//min/max numbers are required to get floating point values.
-#define BIN_ACCEL_MIN -160.0F
-#define BIN_ACCEL_MAX 160.0F
-
-#define BIN_MAG_MIN -2000.0F
-#define BIN_MAG_MAX 2000.0F
-
-#define BIN_ORIENTATION_MIN -60.0F
-#define BIN_ORIENTATION_MAX 60.0F
-
-#define BIN_TEMPERATURE_MIN -150.0F
-#define BIN_TEMPERATURE_MAX 1000.0F
-
-#define BIN_LUMINOSITY_MIN 0.0F
-#define BIN_LUMINOSITY_MAX 2000.0F
-
-#define BIN_UV_MIN 0.0F
-#define BIN_UV_MAX 15.0F
-
 #endif
