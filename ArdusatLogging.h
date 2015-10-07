@@ -54,8 +54,8 @@ int binaryLogLuminosity(const unsigned char sensorId, luminosity_t & data);
 int binaryLogUVLight(const unsigned char sensorId, uvlight_t & data);
 int binaryLogOrientation(const unsigned char sensorId, orientation_t & data);
 int binaryLogPressure(const unsigned char sensorId, pressure_t & data);
-
 bool beginDataLog(int chipSelectPin, const char *fileNamePrefix, bool csvData);
+
 
 /**
  * Setup and use the RTC chip, if found
@@ -65,6 +65,8 @@ bool beginDataLog(int chipSelectPin, const char *fileNamePrefix, bool csvData);
  * automatically uses the RTC if available to timestamp.
  */
 bool setRTC();
+int logRTCTimestamp();
+int binaryLogRTCTimestamp();
 
 #ifdef __cplusplus
 } // extern "C"
