@@ -14,8 +14,8 @@ RTC_DS1307 RTC;
 SdVolume vol;
 SdFat sd;
 File file;
-const prog_char sd_card_error[] = "Not enough RAM (free: ";
-const prog_char csv_header_fmt[] = "time: %lu at %lu\n";
+const char sd_card_error[] PROGMEM = "Not enough RAM (free: ";
+const char csv_header_fmt[] PROGMEM = "time: %lu at %lu\n";
 
 /**
  * Helper function to log null-terminated output buffer string to file.
