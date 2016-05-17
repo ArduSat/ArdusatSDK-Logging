@@ -53,12 +53,13 @@ const short SD_CS_PIN = 10;
 static char LOG_FILE_PREFIX[] = "MYLOG";
 static bool LOG_CSV_DATA = true; // otherwise, binary data is logged
 
-temperature_t temp;
-luminosity_t luminosity;
-uvlight_t uv_light;
-acceleration_t accel;
-magnetic_t mag;
-gyro_t orientation;
+Acceleration accel;
+Gyro gyro;
+Luminosity luminosity;
+Magnetic mag;
+Temperature am_temp;
+//Temperature ir_temp = Temperature(SENSORID_MLX90614);
+//UVLight uv_light;
 
 /*
  * ===  FUNCTION  ======================================================================
@@ -74,13 +75,13 @@ void setup()
     while (true);
   }
 
-  beginAccelerationSensor();
-  beginTemperatureSensor();
-  beginInfraredTemperatureSensor();
-  beginLuminositySensor();
-  beginUVLightSensor();
-  beginGyroSensor();
-  beginMagneticSensor();
+  accel.begin();
+  gyro.begin();
+  luminosity.begin();
+  mag.begin();
+  am_temp.begin();
+  //ir_temp.begin();
+  //uv_light.begin();
 }
 
 /*
@@ -94,33 +95,30 @@ void setup()
  */
 void loop()
 {
-  readAcceleration(accel);
-  readTemperature(temp);
-  readMagnetic(mag);
-  readGyro(orientation);
-  readLuminosity(luminosity);
-  readUVLight(uv_light);
+  accel.read();
+  gyro.read();
+  luminosity.read();
+  mag.read();
+  am_temp.read();
+  //ir_temp.read();
+  //uv_light.read();
 
   if (LOG_CSV_DATA) {
-    logAcceleration("accel", accel);
-    logMagnetic("mag", mag);
-    logGyro("gyro", orientation);
-    logTemperature("temp", temp);
-
-    readInfraredTemperature(temp);
-    logTemperature("ir", temp);
-
-    logLuminosity("lux", luminosity);
-    logUVLight("uv", uv_light);
+    logSensor("accel", accel);
+    logSensor("gyro", gyro);
+    logSensor("lux", luminosity);
+    logSensor("mag", mag);
+    logSensor("temp", am_temp);
+    //logSensor("ir", ir_temp);
+    //logSensor("uv", uv_light);
   } else {
-    binaryLogAcceleration(0, accel);
-    binaryLogMagnetic(1, mag);
-    binaryLogGyro(2, orientation);
-    binaryLogTemperature(3, temp);
-    readInfraredTemperature(temp);
-    binaryLogTemperature(4, temp);
-    binaryLogLuminosity(5, luminosity);
-    binaryLogUVLight(6, uv_light);
+    binaryLogSensor(1, accel);
+    binaryLogSensor(3, gyro);
+    binaryLogSensor(6, luminosity);
+    binaryLogSensor(2, mag);
+    binaryLogSensor(4, am_temp);
+    //binaryLogSensor(5, ir_temp);
+    //binaryLogSensor(7, uv_light);
   }
 
   delay(READ_INTERVAL);
