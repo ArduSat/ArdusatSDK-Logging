@@ -58,8 +58,8 @@ Gyro gyro;
 Luminosity luminosity;
 Magnetic mag;
 Temperature am_temp;
-//Temperature ir_temp = Temperature(SENSORID_MLX90614);
-//UVLight uv_light;
+TemperatureMLX ir_temp;
+UVLight uv_light;
 
 /*
  * ===  FUNCTION  ======================================================================
@@ -80,8 +80,8 @@ void setup()
   luminosity.begin();
   mag.begin();
   am_temp.begin();
-  //ir_temp.begin();
-  //uv_light.begin();
+  ir_temp.begin();
+  uv_light.begin();
 }
 
 /*
@@ -100,8 +100,8 @@ void loop()
   luminosity.read();
   mag.read();
   am_temp.read();
-  //ir_temp.read();
-  //uv_light.read();
+  ir_temp.read();
+  uv_light.read();
 
   if (LOG_CSV_DATA) {
     logSensor("accel", accel);
@@ -109,16 +109,16 @@ void loop()
     logSensor("lux", luminosity);
     logSensor("mag", mag);
     logSensor("temp", am_temp);
-    //logSensor("ir", ir_temp);
-    //logSensor("uv", uv_light);
+    logSensor("ir", ir_temp);
+    logSensor("uv", uv_light);
   } else {
     binaryLogSensor(1, accel);
     binaryLogSensor(3, gyro);
     binaryLogSensor(6, luminosity);
     binaryLogSensor(2, mag);
     binaryLogSensor(4, am_temp);
-    //binaryLogSensor(5, ir_temp);
-    //binaryLogSensor(7, uv_light);
+    binaryLogSensor(5, ir_temp);
+    binaryLogSensor(7, uv_light);
   }
 
   delay(READ_INTERVAL);
