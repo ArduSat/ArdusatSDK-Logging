@@ -1,3 +1,6 @@
+# NOTE, this library is no longer supported.  If you are a Because Learning / Ardusat customer please contact support@ardusat.com for support for current data logging support.
+
+
 # Ardusat Logging SDK
 
 The Ardusat Logging SDK is a software package designed to make logging the data from the sensors
