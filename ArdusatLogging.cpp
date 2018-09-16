@@ -79,9 +79,9 @@ int logBytes(const unsigned char *buffer, unsigned char numBytes)
  *
  * @return number of bytes written
  */
-int logAcceleration(const char *sensorName, acceleration_t & data)
+int logSensor(const char *sensorName, Acceleration & sensor)
 {
-  return logString(accelerationToCSV(sensorName, data));
+  return logString(sensor.toCSV(sensorName));
 }
 
 /**
@@ -92,9 +92,9 @@ int logAcceleration(const char *sensorName, acceleration_t & data)
  *
  * @return number of bytes written
  */
-int logMagnetic(const char *sensorName, magnetic_t & data)
+int logSensor(const char *sensorName, Magnetic & sensor)
 {
-  return logString(magneticToCSV(sensorName, data));
+  return logString(sensor.toCSV(sensorName));
 }
 
 /**
@@ -105,9 +105,9 @@ int logMagnetic(const char *sensorName, magnetic_t & data)
  *
  * @return number of bytes written
  */
-int logGyro(const char *sensorName, gyro_t & data)
+int logSensor(const char *sensorName, Gyro & sensor)
 {
-  return logString(gyroToCSV(sensorName, data));
+  return logString(sensor.toCSV(sensorName));
 }
 
 /**
@@ -118,9 +118,9 @@ int logGyro(const char *sensorName, gyro_t & data)
  *
  * @return number of bytes written
  */
-int logTemperature(const char *sensorName, temperature_t & data)
+int logSensor(const char *sensorName, Temperature & sensor)
 {
-  return logString(temperatureToCSV(sensorName, data));
+  return logString(sensor.toCSV(sensorName));
 }
 
 /**
@@ -131,9 +131,9 @@ int logTemperature(const char *sensorName, temperature_t & data)
  *
  * @return number of bytes written
  */
-int logLuminosity(const char *sensorName, luminosity_t & data)
+int logSensor(const char *sensorName, Luminosity & sensor)
 {
-  return logString(luminosityToCSV(sensorName, data));
+  return logString(sensor.toCSV(sensorName));
 }
 
 /**
@@ -144,9 +144,9 @@ int logLuminosity(const char *sensorName, luminosity_t & data)
  *
  * @return number of bytes written
  */
-int logUVLight(const char *sensorName, uvlight_t & data)
+int logSensor(const char *sensorName, UVLight & sensor)
 {
-  return logString(uvlightToCSV(sensorName, data));
+  return logString(sensor.toCSV(sensorName));
 }
 
 /**
@@ -157,9 +157,9 @@ int logUVLight(const char *sensorName, uvlight_t & data)
  *
  * @return number of bytes written
  */
-int logOrientation(const char *sensorName, orientation_t & data)
+int logSensor(const char *sensorName, Orientation & sensor)
 {
-  return logString(orientationToCSV(sensorName, data));
+  return logString(sensor.toCSV(sensorName));
 }
 
 /**
@@ -170,85 +170,85 @@ int logOrientation(const char *sensorName, orientation_t & data)
  *
  * @return number of bytes written
  */
-int logPressure(const char *sensorName, pressure_t & data)
+int logSensor(const char *sensorName, Pressure & sensor)
 {
-  return logString(pressureToCSV(sensorName, data));
+  return logString(sensor.toCSV(sensorName));
 }
 
 #define init_data_struct(type_def, type_enum) \
   type_def bin_data; \
   bin_data.type = type_enum; \
   bin_data.id = sensorId; \
-  bin_data.timestamp = data.header.timestamp;
+  bin_data.timestamp = sensor.header.timestamp;
 
-int binaryLogAcceleration(const unsigned char sensorId, acceleration_t & data)
+int binaryLogSensor(const unsigned char sensorId, Acceleration & sensor)
 {
   init_data_struct(acceleration_bin_t, ARDUSAT_SENSOR_TYPE_ACCELERATION)
-  bin_data.x = data.x;
-  bin_data.y = data.y;
-  bin_data.z = data.z;
+  bin_data.x = sensor.x;
+  bin_data.y = sensor.y;
+  bin_data.z = sensor.z;
 
   return logBytes((unsigned char *) &bin_data, sizeof(acceleration_bin_t));
 }
 
-int binaryLogMagnetic(const unsigned char sensorId, magnetic_t & data)
+int binaryLogSensor(const unsigned char sensorId, Magnetic & sensor)
 {
   init_data_struct(magnetic_bin_t, ARDUSAT_SENSOR_TYPE_MAGNETIC)
-  bin_data.x = data.x;
-  bin_data.y = data.y;
-  bin_data.z = data.z;
+  bin_data.x = sensor.x;
+  bin_data.y = sensor.y;
+  bin_data.z = sensor.z;
 
   return logBytes((unsigned char *) &bin_data, sizeof(magnetic_bin_t));
 }
 
-int binaryLogGyro(const unsigned char sensorId, gyro_t & data)
+int binaryLogSensor(const unsigned char sensorId, Gyro & sensor)
 {
   init_data_struct(gyro_bin_t, ARDUSAT_SENSOR_TYPE_GYRO)
-  bin_data.x = data.x;
-  bin_data.y = data.y;
-  bin_data.z = data.z;
+  bin_data.x = sensor.x;
+  bin_data.y = sensor.y;
+  bin_data.z = sensor.z;
 
   return logBytes((unsigned char *) &bin_data, sizeof(gyro_bin_t));
 }
 
-int binaryLogTemperature(const unsigned char sensorId, temperature_t & data)
+int binaryLogSensor(const unsigned char sensorId, Temperature & sensor)
 {
   init_data_struct(temperature_bin_t, ARDUSAT_SENSOR_TYPE_TEMPERATURE)
-  bin_data.temp = data.t;
+  bin_data.temp = sensor.t;
 
   return logBytes((unsigned char *) &bin_data, sizeof(temperature_bin_t));
 }
 
-int binaryLogLuminosity(const unsigned char sensorId, luminosity_t & data)
+int binaryLogSensor(const unsigned char sensorId, Luminosity & sensor)
 {
   init_data_struct(luminosity_bin_t, ARDUSAT_SENSOR_TYPE_LUMINOSITY)
-  bin_data.luminosity = data.lux;
+  bin_data.luminosity = sensor.lux;
 
   return logBytes((unsigned char *) &bin_data, sizeof(luminosity_bin_t));
 }
 
-int binaryLogUVLight(const unsigned char sensorId, uvlight_t & data)
+int binaryLogSensor(const unsigned char sensorId, UVLight & sensor)
 {
   init_data_struct(uv_light_bin_t, ARDUSAT_SENSOR_TYPE_UV)
-  bin_data.uv = data.uvindex;
+  bin_data.uv = sensor.uvindex;
 
   return logBytes((unsigned char *) &bin_data, sizeof(uv_light_bin_t));
 }
 
-int binaryLogOrientation(const unsigned char sensorId, orientation_t & data)
+int binaryLogSensor(const unsigned char sensorId, Orientation & sensor)
 {
   init_data_struct(orientation_bin_t, ARDUSAT_SENSOR_TYPE_ORIENTATION)
-  bin_data.roll = data.roll;
-  bin_data.pitch = data.pitch;
-  bin_data.heading = data.heading;
+  bin_data.roll = sensor.roll;
+  bin_data.pitch = sensor.pitch;
+  bin_data.heading = sensor.heading;
 
   return logBytes((unsigned char *) &bin_data, sizeof(orientation_bin_t));
 }
 
-int binaryLogPressure(const unsigned char sensorId, pressure_t & data)
+int binaryLogSensor(const unsigned char sensorId, Pressure & sensor)
 {
   init_data_struct(pressure_bin_t, ARDUSAT_SENSOR_TYPE_PRESSURE)
-  bin_data.pressure = data.pressure;
+  bin_data.pressure = sensor.pressure;
 
   return logBytes((unsigned char *) &bin_data, sizeof(pressure_bin_t));
 }

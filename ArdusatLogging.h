@@ -17,10 +17,6 @@
 
 #include "ArdusatSDK.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /**
  * Log functions take care of persisting data to an SD card
  *
@@ -37,23 +33,25 @@ extern "C" {
  */
 int logString(const char *output_buf);
 int logBytes(const unsigned char *buffer, unsigned char numBytes);
-int logAcceleration(const char *sensorName, acceleration_t & data);
-int logMagnetic(const char *sensorName, magnetic_t & data);
-int logGyro(const char *sensorName, gyro_t & data);
-int logTemperature(const char *sensorName, temperature_t & data);
-int logLuminosity(const char *sensorName, luminosity_t & data);
-int logUVLight(const char *sensorName, uvlight_t & data);
-int logOrientation(const char *sensorName, orientation_t & data);
-int logPressure(const char *sensorName, pressure_t & data);
+int logSensor(const char *sensorName, Acceleration & sensor);
+int logSensor(const char *sensorName, Gyro & sensor);
+int logSensor(const char *sensorName, Luminosity & sensor);
+int logSensor(const char *sensorName, Magnetic & sensor);
+int logSensor(const char *sensorName, Orientation & sensor);
+int logSensor(const char *sensorName, Pressure & sensor);
+int logSensor(const char *sensorName, RGBLight & sensor);
+int logSensor(const char *sensorName, Temperature & sensor);
+int logSensor(const char *sensorName, UVLight & sensor);
 
-int binaryLogAcceleration(const unsigned char sensorId, acceleration_t & data);
-int binaryLogMagnetic(const unsigned char sensorId, magnetic_t & data);
-int binaryLogGyro(const unsigned char sensorId, gyro_t & data);
-int binaryLogTemperature(const unsigned char sensorId, temperature_t & data);
-int binaryLogLuminosity(const unsigned char sensorId, luminosity_t & data);
-int binaryLogUVLight(const unsigned char sensorId, uvlight_t & data);
-int binaryLogOrientation(const unsigned char sensorId, orientation_t & data);
-int binaryLogPressure(const unsigned char sensorId, pressure_t & data);
+int binaryLogSensor(const unsigned char sensorId, Acceleration & sensor);
+int binaryLogSensor(const unsigned char sensorId, Gyro & sensor);
+int binaryLogSensor(const unsigned char sensorId, Luminosity & sensor);
+int binaryLogSensor(const unsigned char sensorId, Magnetic & sensor);
+int binaryLogSensor(const unsigned char sensorId, Orientation & sensor);
+int binaryLogSensor(const unsigned char sensorId, Pressure & sensor);
+int binaryLogSensor(const unsigned char sensorId, RGBLight & sensor);
+int binaryLogSensor(const unsigned char sensorId, Temperature & sensor);
+int binaryLogSensor(const unsigned char sensorId, UVLight & sensor);
 bool beginDataLog(int chipSelectPin, const char *fileNamePrefix, bool csvData);
 
 
@@ -67,9 +65,5 @@ bool beginDataLog(int chipSelectPin, const char *fileNamePrefix, bool csvData);
 bool setRTC();
 int logRTCTimestamp();
 int binaryLogRTCTimestamp();
-
-#ifdef __cplusplus
-} // extern "C"
-#endif
 
 #endif /* ARDUSATLOGGING_H_ */
